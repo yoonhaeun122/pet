@@ -1,0 +1,48 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>반려동물 등록 | PetCare</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <main>
+        <div class="white-card" style="max-width:500px; margin:40px auto;">
+            <h2>🐾 우리 아이 등록하기</h2>
+            <p>소중한 반려동물의 정보를 입력해 주세요.</p>
+
+            <% if (typeof error !== 'undefined' && error) { %>
+                <p style="color:red;"><%= error %></p>
+            <% } %>
+
+            <form action="/pets/register" method="POST">
+                <p>반려동물 이름</p>
+                <input type="text" name="name" required
+                    placeholder="예: 초코"
+                    style="width:100%; padding:12px;">
+
+                <p>품종</p>
+                <input type="text" name="breed"
+                    placeholder="예: 브리티쉬 롱헤어"
+                    style="width:100%; padding:12px;">
+
+                <p>생년월일</p>
+                <input type="date" name="birth_date"
+                    style="width:100%; padding:12px;">
+
+                <button type="submit" class="button"
+                    style="width:100%; border:0; cursor:pointer;">
+                    반려동물 등록하기
+                </button>
+            </form>
+
+            <p style="text-align:center; margin-top:20px;">
+                <a href="/">메인으로 돌아가기</a>
+            </p>
+        </div>
+    </main>
+</body>
+</html>
+

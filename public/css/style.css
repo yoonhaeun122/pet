@@ -1,0 +1,431 @@
+cd ~/projects/202508033/pet
+cat > public/css/style.css <<'EOF'
+@import url('https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap');
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: #f7f8f3;
+    color: #394638;
+    font-family: 'Noto Sans KR', sans-serif;
+}
+
+.layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: 245px;
+    background: #fff;
+    padding: 35px 25px;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid #edf0e9;
+}
+
+.sidebar h1 {
+    font-family: 'Jua', sans-serif;
+    font-size: 29px;
+    color: #557b59;
+    margin: 0 0 55px;
+}
+
+.sidebar h1 span {
+    color: #e9a58c;
+}
+
+.label, .sidebar > p {
+    font-size: 11px;
+    font-weight: 700;
+    color: #a6b0a1;
+    letter-spacing: 2px;
+}
+
+.sidebar a {
+    text-decoration: none;
+    color: #7d897b;
+    padding: 14px;
+    margin: 5px 0;
+    border-radius: 12px;
+    font-size: 14px;
+}
+
+.sidebar a:hover,
+.sidebar a.active {
+    background: #eaf2e7;
+    color: #527b55;
+    font-weight: 700;
+}
+
+.side-bottom {
+    margin-top: auto;
+    text-align: center;
+}
+
+.side-note {
+    background: #f5f7ef;
+    padding: 20px 12px;
+    border-radius: 16px;
+}
+
+.side-note div {
+    font-size: 30px;
+}
+
+.side-note b {
+    display: block;
+    margin: 10px 0;
+    font-size: 13px;
+}
+
+.side-note p {
+    color: #929c8e;
+    font-size: 11px;
+    line-height: 1.6;
+}
+
+.side-bottom small {
+    display: block;
+    color: #aab3a5;
+    margin-top: 25px;
+}
+
+main {
+    flex: 1;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 40px 55px;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+header small,
+.heading small,
+.hero small,
+.white-card > small {
+    color: #9aa891;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+}
+
+header h2 {
+    font-size: 25px;
+    margin: 8px 0;
+}
+
+.avatar {
+    background: #f0e7dc;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-size: 25px;
+}
+
+.hero {
+    background: #e5efdf;
+    border-radius: 25px;
+    padding: 42px 50px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    overflow: hidden;
+    margin-bottom: 45px;
+}
+
+.hero h1 {
+    font-family: 'Jua', sans-serif;
+    font-size: 34px;
+    line-height: 1.45;
+    margin: 15px 0;
+    color: #3e6043;
+}
+
+.hero h1 span {
+    color: #e79c83;
+}
+
+.hero p {
+    color: #788c75;
+    line-height: 1.8;
+    font-size: 14px;
+}
+
+.hero-pet {
+    font-size: 115px;
+    margin-right: 35px;
+}
+
+.button, .sub-button {
+    display: inline-block;
+    background: #658b65;
+    color: white;
+    text-decoration: none;
+    padding: 13px 20px;
+    border-radius: 10px;
+    font-size: 13px;
+    margin-top: 12px;
+}
+
+section {
+    margin-bottom: 40px;
+}
+
+.heading {
+    margin-bottom: 20px;
+}
+
+.heading h2 {
+    font-size: 21px;
+    margin: 7px 0;
+}
+
+.pet-card {
+    background: white;
+    border-radius: 18px;
+    padding: 25px;
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    box-shadow: 0 5px 20px #354d3510;
+}
+
+.pet-picture {
+    width: 110px;
+    height: 110px;
+    background: #f6eee5;
+    border-radius: 18px;
+    display: grid;
+    place-items: center;
+    font-size: 55px;
+}
+
+.pet-card small {
+    color: #a2ad9d;
+    font-size: 10px;
+    letter-spacing: 1px;
+}
+
+.pet-card h3 {
+    margin: 8px 0;
+}
+
+.pet-card p {
+    color: #929b8e;
+    font-size: 13px;
+    line-height: 1.7;
+}
+
+.sub-button {
+    padding: 9px 15px;
+    background: #edf3e9;
+    color: #5b805c;
+    font-weight: 700;
+}
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+}
+
+.stat {
+    padding: 22px;
+    border-radius: 17px;
+}
+
+.stat span {
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.stat h2 {
+    font-size: 29px;
+    margin: 18px 0 5px;
+}
+
+.stat h2 small {
+    font-size: 13px;
+    font-weight: 400;
+}
+
+.stat p {
+    font-size: 11px;
+    color: #89948a;
+}
+
+.green { background: #e8f1e5; }
+.peach { background: #faeee5; }
+.blue { background: #e9eff5; }
+.pink { background: #f6eaf0; }
+
+.bottom {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+}
+
+.white-card, .quote {
+    background: white;
+    border-radius: 18px;
+    padding: 25px;
+}
+
+.white-card h3 {
+    margin: 10px 0 20px;
+}
+
+.check {
+    padding: 13px 0;
+    border-top: 1px solid #f0f1ed;
+    font-size: 13px;
+}
+
+.check span {
+    float: right;
+    color: #b1b9ad;
+    font-size: 11px;
+}
+
+.quote {
+    background: #f5eee7;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+}
+
+.quote div {
+    color: #d6a68e;
+    font-family: Georgia, serif;
+    font-size: 55px;
+    height: 45px;
+}
+
+.quote h3 {
+    font-family: 'Jua', sans-serif;
+    line-height: 1.7;
+    color: #796b5e;
+}
+
+.quote p {
+    color: #b49b87;
+    font-size: 10px;
+    letter-spacing: 2px;
+}
+
+footer {
+    border-top: 1px solid #e9ede5;
+    padding: 25px 0;
+    color: #81927c;
+    font-size: 13px;
+}
+
+footer span {
+    color: #aab3a5;
+    margin-left: 10px;
+}
+
+@media (max-width: 900px) {
+    .sidebar {
+        width: 180px;
+        padding: 25px 15px;
+    }
+
+    main {
+        padding: 30px 20px;
+    }
+
+    .stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .layout {
+        display: block;
+    }
+
+    .sidebar {
+        width: 100%;
+        padding: 15px;
+    }
+
+    .sidebar h1 {
+        margin: 0 0 15px;
+    }
+
+    .side-bottom {
+        display: none;
+    }
+
+    main {
+        padding: 20px;
+    }
+
+    .hero {
+        padding: 25px;
+    }
+
+    .hero h1 {
+        font-size: 25px;
+    }
+
+    .hero-pet {
+        font-size: 65px;
+        margin: 0;
+    }
+
+    .stats, .bottom {
+        grid-template-columns: 1fr;
+    }
+}
+
+.white-card form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.white-card label {
+    font-weight: 600;
+    color: #555;
+    margin-top: 5px;
+}
+
+.white-card input,
+.white-card select,
+.white-card textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #e5e5e5;
+    border-radius: 10px;
+    font-size: 14px;
+    box-sizing: border-box;
+    font-family: inherit;
+}
+
+.white-card textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.white-card button {
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    margin-top: 10px;
+}
+
+EOF

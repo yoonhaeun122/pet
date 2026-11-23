@@ -1,0 +1,55 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원가입 | PetCare</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <main>
+        <div class="white-card" style="max-width:450px; margin:50px auto;">
+            <h2>🐾 PetCare 회원가입</h2>
+            <p>반려동물의 건강한 일상을 기록해 보세요.</p>
+
+            <% if (typeof error !== 'undefined' && error) { %>
+                <p style="color:red;"><%= error %></p>
+            <% } %>
+
+            <form action="/register" method="POST">
+                <p>이름</p>
+                <input type="text" name="name" required
+                    placeholder="이름을 입력하세요"
+                    style="width:100%; padding:12px;">
+
+                <p>아이디</p>
+                <input type="text" name="username" required
+                    placeholder="아이디를 입력하세요"
+                    style="width:100%; padding:12px;">
+
+                <p>비밀번호</p>
+                <input type="password" name="password" required
+                    placeholder="비밀번호를 입력하세요"
+                    style="width:100%; padding:12px;">
+
+                <p>비밀번호 확인</p>
+                <input type="password" name="passwordConfirm" required
+                    placeholder="비밀번호를 다시 입력하세요"
+                    style="width:100%; padding:12px;">
+
+                <button type="submit" class="button"
+                    style="width:100%; border:0; cursor:pointer;">
+                    회원가입
+                </button>
+            </form>
+
+            <p style="text-align:center; margin-top:20px;">
+                이미 계정이 있나요?
+                <a href="/login">로그인</a>
+            </p>
+        </div>
+    </main>
+</body>
+</html>
+

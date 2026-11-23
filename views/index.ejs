@@ -1,0 +1,160 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PetCare</title>
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<div class="layout">
+<aside class="sidebar">
+    <h1>🐾 PetCare<span>.</span></h1>
+    <p class="label">MENU</p>
+    <a class="active" href="/">⌂　 대시보드</a>
+    <a href="#pet">♡　 반려동물 관리</a>
+    <a href="#health">✚　 건강 기록</a>
+    <a href="#feeding">♧　 급여 기록</a>
+    <a href="#weight">⌁　 몸무게 관리</a>
+    <div class="side-bottom">
+        <div class="side-note">
+            <div>🐶</div>
+            <b>오늘도 행복한 하루!</b>
+            <p>우리 아이의 건강한 일상을 기록해요.</p>
+        </div>
+        <small>Made with ♥ PetCare</small>
+    </div>
+</aside>
+
+<main>
+    <header>
+        <div>
+            <small>MONDAY · PET LIFE</small>
+            <h2>안녕하세요! 반가워요 🌿</h2>
+        </div>
+        <div class="avatar">🐱</div>
+    </header>
+
+    <section class="hero">
+        <div>
+            <small>WELCOME TO PETCARE</small>
+            <h1>소중한 우리 아이,<br>오늘도 건강하게 <span>♥</span></h1>
+            <p>작은 일상부터 건강까지,<br>PetCare와 함께 기록해 보세요.</p>
+            <a href="/pets/register" class="button">우리 아이 등록하기 →</a>
+        </div>
+        <div class="hero-pet">🐶</div>
+    </section>
+
+    <section id="pet">
+        <div class="heading">
+            <div>
+                <small>MY LOVELY PETS</small>
+                <h2>우리 아이 관리하기 🐾</h2>
+            </div>
+        </div>
+
+        <% if (pets && pets.length > 0) { %>
+            <% pets.forEach(pet => { %>
+                <div class="pet-card">
+                    <div class="pet-picture">🐱</div>
+                    <div>
+                        <small>MY PET</small>
+                        <h3><%= pet.name %></h3>
+                        <p>
+                            품종: <%= pet.breed || '미등록' %><br>
+                            생년월일: <%= pet.birth_date
+                                ? new Date(pet.birth_date).toLocaleDateString('ko-KR')
+                                : '미등록' %>
+                        </p>
+
+                        <span class="sub-button">등록 완료 ♥</span>
+
+                        <a href="/health/<%= pet.id %>" class="sub-button">
+                            + 건강 기록 등록
+                        </a>
+
+                        <a href="/feeding/<%= pet.id %>" class="sub-button">
+                            + 급여 기록 등록
+                        </a>
+
+                        <a href="/weight/<%= pet.id %>" class="sub-button">
+                            + 몸무게 기록
+                        </a>
+                    </div>
+                </div>
+            <% }); %>
+        <% } else { %>
+            <div class="pet-card">
+                <div class="pet-picture">🐱</div>
+                <div>
+                    <small>MY PET</small>
+                    <h3>우리 아이를 등록해 주세요!</h3>
+                    <p>이름과 품종, 생일을 등록하고<br>건강 기록을 관리할 수 있어요.</p>
+                    <a href="/pets/register" class="sub-button">+ 반려동물 등록</a>
+                </div>
+            </div>
+        <% } %>
+    </section>
+
+    <section id="health">
+        <div class="heading">
+            <div>
+                <small>HEALTH OVERVIEW</small>
+                <h2>건강 관리 한눈에 보기</h2>
+            </div>
+        </div>
+
+        <div class="stats">
+            <div class="stat green">
+                <span>♡ 건강 기록</span>
+                <h2><%= stats.healthCount %> <small>건</small></h2>
+                <p>우리 아이의 건강 기록</p>
+            </div>
+
+            <div class="stat peach" id="feeding">
+                <span>♧ 급여 기록</span>
+                <h2><%= stats.feedingCount %> <small>건</small></h2>
+                <p>오늘의 식사 기록</p>
+            </div>
+
+            <div class="stat blue" id="weight">
+                <span>⌁ 몸무게</span>
+                <h2>
+                    <%= stats.latestWeight !== null
+                        ? Number(stats.latestWeight).toFixed(2)
+                        : '--' %>
+                    <small>kg</small>
+                </h2>
+                <p>최근 몸무게</p>
+            </div>
+
+            <div class="stat pink">
+                <span>♡ 예방접종</span>
+                <h2><%= stats.vaccinationCount %> <small>건</small></h2>
+                <p>등록된 접종 기록</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="bottom">
+        <div class="white-card">
+            <small>DAILY CARE</small>
+            <h3>오늘의 건강 체크 🌱</h3>
+            <div class="check">🍚　식사 챙기기 <span>기록 전</span></div>
+            <div class="check">💧　물 마시기 <span>기록 전</span></div>
+            <div class="check">🎾　놀이 시간 <span>기록 전</span></div>
+        </div>
+        <div class="quote">
+            <div>“</div>
+            <h3>우리에게는 평범한 하루지만<br>아이에게는 행복한 하루예요.</h3>
+            <p>YOUR PET, YOUR LOVE 🐾</p>
+        </div>
+    </section>
+
+    <footer>🐾 PetCare <span>소중한 가족의 건강한 일상을 함께합니다.</span></footer>
+</main>
+</div>
+</body>
+</html>
+

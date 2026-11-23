@@ -1,0 +1,99 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>건강 기록 | PetCare</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<div class="layout">
+    <aside class="sidebar">
+        <h1>🐾 PetCare<span>.</span></h1>
+        <p class="label">MENU</p>
+        <a href="/">⌂　 대시보드</a>
+        <a href="/#pet">♡　 반려동물 관리</a>
+        <a class="active" href="#">✚　 건강 기록</a>
+        <a href="/#feeding">♧　 급여 기록</a>
+        <a href="/#weight">⌁　 몸무게 관리</a>
+    </aside>
+
+    <main>
+        <header>
+            <div>
+                <small>HEALTH MANAGEMENT</small>
+                <h2><%= pet.name %>의 건강 기록 🐾</h2>
+            </div>
+            <div class="avatar">🐱</div>
+        </header>
+
+        <section class="white-card">
+            <small>NEW HEALTH RECORD</small>
+            <h3>건강 기록 등록하기 🌱</h3>
+
+            <form action="/health/<%= pet.id %>" method="POST">
+                <label>기록 종류</label>
+                <select name="category" required>
+                    <option value="">선택해 주세요</option>
+                    <option value="예방접종">예방접종</option>
+                    <option value="병원 방문">병원 방문</option>
+                    <option value="진료">진료</option>
+                    <option value="기타">기타</option>
+                </select>
+
+                <label>제목</label>
+                <input type="text" name="title"
+                    placeholder="예: 종합백신 2차 접종" required>
+
+                <label>기록 날짜</label>
+                <input type="date" name="record_date" required>
+
+                <label>상세 내용</label>
+                <textarea name="description"
+                    placeholder="건강 상태 및 특이사항을 입력해 주세요."></textarea>
+
+                <button type="submit" class="button">
+                    건강 기록 저장하기 →
+                </button>
+            </form>
+        </section>
+
+        <section>
+            <div class="heading">
+                <div>
+                    <small>HEALTH HISTORY</small>
+                    <h2>건강 기록 목록</h2>
+                </div>
+            </div>
+
+            <% if (records.length > 0) { %>
+                <% records.forEach(record => { %>
+                    <div class="pet-card">
+                        <div class="pet-picture">♡</div>
+                        <div>
+                            <small><%= record.category %></small>
+                            <h3><%= record.title %></h3>
+                            <p>
+                                날짜:
+                                <%= new Date(record.record_date)
+                                    .toLocaleDateString('ko-KR') %>
+                                <br>
+                                <%= record.description || '상세 내용 없음' %>
+                            </p>
+                        </div>
+                    </div>
+                <% }) %>
+            <% } else { %>
+                <div class="white-card">
+                    아직 등록된 건강 기록이 없습니다.
+                </div>
+            <% } %>
+        </section>
+
+        <footer>🐾 PetCare <span>소중한 가족의 건강한 일상을 함께합니다.</span></footer>
+    </main>
+</div>
+</body>
+</html>
+

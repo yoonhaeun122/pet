@@ -1,0 +1,170 @@
+cat > views/index.ejs <<'EOF'
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %> | 우리 아이 건강 관리</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div class="app">
+
+    <aside class="sidebar">
+        <div class="logo">
+            <span class="logo-icon">🐾</span>
+            <span>PetCare<span class="logo-dot">.</span></span>
+        </div>
+
+        <p class="menu-label">MENU</p>
+
+        <nav>
+            <a href="/" class="menu-item active">
+                <span>⌂</span> 대시보드
+            </a>
+            <a href="#pet" class="menu-item">
+                <span>♡</span> 반려동물 관리
+            </a>
+            <a href="#health" class="menu-item">
+                <span>✚</span> 건강 기록
+            </a>
+            <a href="#feeding" class="menu-item">
+                <span>♧</span> 급여 기록
+            </a>
+            <a href="#weight" class="menu-item">
+                <span>⌁</span> 몸무게 관리
+            </a>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <div class="help-card">
+                <div class="help-icon">🐶</div>
+                <strong>우리 아이를 위한</strong>
+                <strong>작은 습관부터!</strong>
+                <p>매일의 기록이 건강한 내일을 만들어요.</p>
+            </div>
+            <p class="sidebar-footer">Made with ♥ PetCare</p>
+        </div>
+    </aside>
+
+    <main class="main">
+
+        <header class="topbar">
+            <div>
+                <span class="top-caption">MONDAY · PET LIFE</span>
+                <h2>우리 아이의 하루를 기록해요 <span>🌿</span></h2>
+            </div>
+            <div class="top-actions">
+                <span class="today">🐾 행복한 반려생활</span>
+                <div class="profile-circle">🐱</div>
+            </div>
+        </header>
+
+        <section class="welcome">
+            <div class="welcome-content">
+                <span class="eyebrow">WELCOME TO PETCARE</span>
+                <h1>소중한 우리 아이,<br>오늘도 건강하게 <span>♥</span></h1>
+                <p>작은 일상부터 건강까지,<br>PetCare와 함께 소중한 순간을 기록해 보세요.</p>
+                <a href="#pet" class="primary-btn">우리 아이 등록하기 <span>→</span></a>
+            </div>
+            <div class="welcome-art">
+                <div class="art-circle"></div>
+                <div class="pet-emoji">🐶</div>
+                <span class="floating-heart">♥</span>
+                <span class="floating-paw">🐾</span>
+                <span class="floating-star">✦</span>
+            </div>
+        </section>
+
+        <section class="section-heading" id="pet">
+            <div>
+                <span class="section-caption">MY LOVELY PETS</span>
+                <h2>우리 아이 관리하기 <span>🐾</span></h2>
+            </div>
+            <a href="#pet" class="text-link">전체 보기 →</a>
+        </section>
+
+        <section class="pet-card">
+            <div class="pet-avatar">🐱</div>
+            <div class="pet-info">
+                <span class="pet-tag">MY PET</span>
+                <h3>우리 아이를 등록해 주세요!</h3>
+                <p>이름, 품종, 생일 등을 등록하고<br>건강 기록을 관리할 수 있어요.</p>
+                <a href="#pet" class="small-btn">+ 반려동물 등록</a>
+            </div>
+            <div class="pet-decoration">♡</div>
+        </section>
+
+        <section class="section-heading" id="health">
+            <div>
+                <span class="section-caption">HEALTH OVERVIEW</span>
+                <h2>건강 관리 한눈에 보기</h2>
+            </div>
+        </section>
+
+        <section class="stats-grid">
+            <div class="stat-card green">
+                <div class="stat-top"><span>건강 기록</span><span>♡</span></div>
+                <div class="stat-number">0<span>건</span></div>
+                <p>우리 아이의 건강 기록</p>
+                <div class="stat-icon">✚</div>
+            </div>
+
+            <div class="stat-card peach" id="feeding">
+                <div class="stat-top"><span>급여 기록</span><span>♧</span></div>
+                <div class="stat-number">0<span>건</span></div>
+                <p>오늘의 식사 기록</p>
+                <div class="stat-icon">🍚</div>
+            </div>
+
+            <div class="stat-card blue" id="weight">
+                <div class="stat-top"><span>몸무게 기록</span><span>⌁</span></div>
+                <div class="stat-number">--<span>kg</span></div>
+                <p>최근 몸무게</p>
+                <div class="stat-icon">⚖</div>
+            </div>
+
+            <div class="stat-card pink">
+                <div class="stat-top"><span>예방접종</span><span>♡</span></div>
+                <div class="stat-number">0<span>건</span></div>
+                <p>등록된 접종 기록</p>
+                <div class="stat-icon">💉</div>
+            </div>
+        </section>
+
+        <section class="bottom-grid">
+            <div class="content-card">
+                <div class="card-heading">
+                    <div>
+                        <span class="section-caption">DAILY CARE</span>
+                        <h3>오늘의 건강 체크</h3>
+                    </div>
+                    <span class="card-emoji">🌱</span>
+                </div>
+                <div class="check-row"><span>🍚</span><div><strong>식사 챙기기</strong><p>규칙적인 식사 습관 만들기</p></div><span class="check-status">기록 전</span></div>
+                <div class="check-row"><span>💧</span><div><strong>물 마시기</strong><p>신선한 물 준비하기</p></div><span class="check-status">기록 전</span></div>
+                <div class="check-row"><span>🎾</span><div><strong>놀이 시간</strong><p>즐거운 놀이로 스트레스 관리</p></div><span class="check-status">기록 전</span></div>
+            </div>
+
+            <div class="content-card quote-card">
+                <span class="quote-mark">“</span>
+                <h3>우리에게는 평범한 하루지만<br>아이에게는 가장 행복한 하루일 수 있어요.</h3>
+                <div class="quote-bottom">YOUR PET, YOUR LOVE <span>🐾</span></div>
+            </div>
+        </section>
+
+        <footer>
+            <span>🐾 PetCare</span>
+            <span>소중한 가족의 건강한 일상을 함께합니다.</span>
+        </footer>
+
+    </main>
+</div>
+
+</body>
+</html>
+EOF
