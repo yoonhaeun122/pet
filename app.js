@@ -23,7 +23,7 @@ app.use(session({
 app.get('/', async (req, res) => {
     try {
         const [rows] = await db.query('SELECT NOW() AS currentTime');
-
+	let userName = '';
         let pets = [];
         let stats = {
             healthCount: 0,
@@ -31,9 +31,18 @@ app.get('/', async (req, res) => {
             latestWeight: null,
             vaccinationCount: 0
         };
+        let dailyCare = [];
 
         if (req.session.userId) {
             const userId = req.session.userId;
+		const [userRows] = await db.query(
+    'SELECT name FROM users WHERE id = ?',
+    [userId]
+);
+
+if (userRows.length > 0) {
+    userName = userRows[0].name;
+}
 
             const [petRows] = await db.query(
                 'SELECT * FROM pets WHERE user_id = ?',
@@ -43,6 +52,11 @@ app.get('/', async (req, res) => {
             pets = petRows;
 
             if (pets.length > 0) {
+                const [careRows] = await db.query(
+                    'SELECT care_type FROM daily_care_records WHERE pet_id = ? AND care_date = CURDATE()',
+                    [pets[0].id]
+                );
+                dailyCare = careRows.map(row => row.care_type);
                 const [statRows] = await db.query(`
                     SELECT
                     (
@@ -82,12 +96,15 @@ app.get('/', async (req, res) => {
             }
         }
 
-        res.render('index', {
-            title: 'PetCare',
-            dbTime: rows[0].currentTime,
-            pets: pets,
-            stats: stats
-        });
+    	res.render('index', {
+    title: 'PetCare',
+    dbTime: rows[0].currentTime,
+    pets: pets,
+    stats: stats,
+    dailyCare: dailyCare,
+    session: req.session,
+    userName: userName
+});
 
     } catch (error) {
         console.error(error);
@@ -98,10 +115,54 @@ app.get('/', async (req, res) => {
 
 
 
+// 오늘의 건강 체크 저장
+app.post('/daily-care/:type', async (req, res) => {
+    if (!req.session.userId) {
+        return res.status(401).json({ success: false, message: '로그인이 필요합니다.' });
+    }
+
+    const allowedTypes = ['meal', 'water', 'play'];
+    const type = req.params.type;
+
+    if (!allowedTypes.includes(type)) {
+        return res.status(400).json({ success: false });
+    }
+
+    try {
+        const [pets] = await db.query(
+            'SELECT id FROM pets WHERE user_id = ? ORDER BY id ASC LIMIT 1',
+            [req.session.userId]
+        );
+
+        if (pets.length === 0) {
+            return res.status(400).json({ success: false, message: '반려동물을 먼저 등록해 주세요.' });
+        }
+
+        if (req.body.checked) {
+            await db.query(
+                'INSERT IGNORE INTO daily_care_records (pet_id, care_type, care_date) VALUES (?, ?, CURDATE())',
+                [pets[0].id, type]
+            );
+        } else {
+            await db.query(
+		 'DELETE FROM daily_care_records WHERE pet_id = ? AND care_type = ? AND care_date = CURDATE()',
+                [pets[0].id, type]
+            );
+        }
+
+        res.json({ success: true });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false });
+    }
+});
+
+
 // 회원가입 페이지
 app.get('/register', (req, res) => {
     res.render('register', { error: null });
 });
+
 
 // 회원가입 처리
 app.post('/register', async (req, res) => {
@@ -129,12 +190,24 @@ app.post('/register', async (req, res) => {
         const bcrypt = require('bcrypt');
         const passwordHash = await bcrypt.hash(password, 10);
 
-        await db.query(
+        const [result] = await db.query(
             'INSERT INTO users (username, password_hash, name) VALUES (?, ?, ?)',
             [username.trim(), passwordHash, name.trim()]
         );
 
-        res.send('회원가입 성공! 회원 정보가 저장되었습니다.');
+        // 회원가입 후 자동 로그인
+        req.session.userId = result.insertId;
+	    req.session.name = name.trim();
+
+        // 세션 저장 후 메인 화면으로 이동
+        req.session.save((err) => {
+            if (err) {
+                console.error(err);
+                return res.status(500).send('로그인 처리 중 오류가 발생했습니다.');
+            }
+
+            res.redirect('/');
+        });
 
     } catch (error) {
         console.error(error);
@@ -148,6 +221,7 @@ app.post('/register', async (req, res) => {
         res.status(500).send('회원가입 중 오류가 발생했습니다.');
     }
 });
+
 
 // 로그인 페이지
 app.get('/login', (req, res) => {
@@ -183,16 +257,23 @@ app.post('/login', async (req, res) => {
         }
 
         req.session.regenerate((err) => {
-            if (err) {
-                return res.status(500).send('로그인 오류');
-            }
+    if (err) {
+        return res.status(500).send('로그인 오류');
+    }
 
-            req.session.userId = rows[0].id;
-            req.session.username = rows[0].username;
-            req.session.name = rows[0].name;
+    req.session.userId = rows[0].id;
+    req.session.username = rows[0].username;
+    req.session.name = rows[0].name;
 
-            res.redirect('/');
-        });
+    req.session.save((saveErr) => {
+        if (saveErr) {
+            console.error(saveErr);
+            return res.status(500).send('세션 저장 오류');
+        }
+
+        res.redirect('/');
+    });
+});
 
     } catch (error) {
         console.error(error);
@@ -477,7 +558,7 @@ app.post('/pets/register', async (req, res) => {
             ]
         );
 
-        res.send('반려동물 등록 성공!');
+        res.redirect('/');
 
     } catch (error) {
         console.error(error);
@@ -485,7 +566,83 @@ app.post('/pets/register', async (req, res) => {
     }
 });
 
-app.listen(3000, () => {
+const https = require('https');
+// 반려동물 삭제
+app.post('/pets/delete/:id', async (req, res) => {
+    if (!req.session.userId) {
+        return res.redirect('/login');
+    }
+
+    const petId = req.params.id;
+    const userId = req.session.userId;
+
+    const connection = await db.getConnection();
+
+    try {
+        await connection.beginTransaction();
+
+        // 현재 로그인한 사용자의 반려동물인지 확인
+        const [pets] = await connection.query(
+            'SELECT id FROM pets WHERE id = ? AND user_id = ?',
+            [petId, userId]
+        );
+
+        if (pets.length === 0) {
+            await connection.rollback();
+            return res.status(404).send('반려동물을 찾을 수 없습니다.');
+        }
+
+        // 해당 반려동물의 관련 기록 삭제
+        await connection.query(
+            'DELETE FROM daily_care_records WHERE pet_id = ?',
+            [petId]
+        );
+
+        await connection.query(
+            'DELETE FROM feeding_records WHERE pet_id = ?',
+            [petId]
+        );
+
+        await connection.query(
+            'DELETE FROM health_records WHERE pet_id = ?',
+            [petId]
+        );
+
+        await connection.query(
+            'DELETE FROM weight_records WHERE pet_id = ?',
+            [petId]
+        );
+
+        // 반려동물 삭제
+        await connection.query(
+            'DELETE FROM pets WHERE id = ? AND user_id = ?',
+            [petId, userId]
+        );
+
+        await connection.commit();
+        res.redirect('/');
+
+    } catch (error) {
+        await connection.rollback();
+        console.error(error);
+        res.status(500).send('반려동물 삭제 중 오류가 발생했습니다.');
+
+    } finally {
+        connection.release();
+    }
+});
+
+app.listen(3000, '0.0.0.0', () => {
     console.log('PetCare 서버 실행!');
-    console.log('http://localhost:3000');
+
+    https.get('https://checkip.amazonaws.com', (response) => {
+        let ip = '';
+
+        response.on('data', (chunk) => ip += chunk);
+        response.on('end', () => {
+            console.log('외부 접속 주소: http://' + ip.trim() + ':3000');
+        });
+    }).on('error', () => {
+        console.log('공인 IP 확인 실패');
+    });
 });

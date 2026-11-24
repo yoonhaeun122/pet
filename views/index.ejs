@@ -29,12 +29,19 @@
 
 <main>
     <header>
-        <div>
-            <small>MONDAY · PET LIFE</small>
+    <div>
+        <small>MONDAY · PET LIFE</small>
+        <% if (session && session.userId) { %>
+            <h2>안녕하세요, <%= session.name %>님! 🌿</h2>
+            <a href="/logout" class="button">로그아웃</a>
+        <% } else { %>
             <h2>안녕하세요! 반가워요 🌿</h2>
-        </div>
-        <div class="avatar">🐱</div>
-    </header>
+            <a href="/login" class="button">로그인</a>
+            <a href="/register" class="button">회원가입</a>
+        <% } %>
+    </div>
+    <div class="avatar">🐱</div>
+</header>
 
     <section class="hero">
         <div>
@@ -69,6 +76,12 @@
                         </p>
 
                         <span class="sub-button">등록 완료 ♥</span>
+			<form action="/pets/delete/<%= pet.id %>" method="POST"
+      onsubmit="return confirm('정말 이 반려동물을 삭제할까요? 관련 기록도 모두 삭제됩니다.');">
+    <button type="submit" class="sub-button">
+        반려동물 삭제 🗑️
+    </button>
+</form>
 
                         <a href="/health/<%= pet.id %>" class="sub-button">
                             + 건강 기록 등록
@@ -141,9 +154,18 @@
         <div class="white-card">
             <small>DAILY CARE</small>
             <h3>오늘의 건강 체크 🌱</h3>
-            <div class="check">🍚　식사 챙기기 <span>기록 전</span></div>
-            <div class="check">💧　물 마시기 <span>기록 전</span></div>
-            <div class="check">🎾　놀이 시간 <span>기록 전</span></div>
+            <div class="check">
+                <label><input type="checkbox" class="daily-care" data-type="meal" <%= dailyCare.includes('meal') ? 'checked' : '' %>> 🍚 식사 챙기기</label>
+                <span class="care-status"><%= dailyCare.includes('meal') ? '완료!' : '기록 전' %></span>
+            </div>
+            <div class="check">
+                <label><input type="checkbox" class="daily-care" data-type="water" <%= dailyCare.includes('water') ? 'checked' : '' %>> 💧 물 마시기</label>
+                <span class="care-status"><%= dailyCare.includes('water') ? '완료!' : '기록 전' %></span>
+            </div>
+            <div class="check">
+                <label><input type="checkbox" class="daily-care" data-type="play" <%= dailyCare.includes('play') ? 'checked' : '' %>> 🎾 놀이 시간</label>
+                <span class="care-status"><%= dailyCare.includes('play') ? '완료!' : '기록 전' %></span>
+            </div>
         </div>
         <div class="quote">
             <div>“</div>
@@ -155,6 +177,35 @@
     <footer>🐾 PetCare <span>소중한 가족의 건강한 일상을 함께합니다.</span></footer>
 </main>
 </div>
-</body>
+
+<script>
+document.querySelectorAll('.daily-care').forEach(input => {
+    input.addEventListener('change', async function () {
+        const checkbox = this;
+        const status = checkbox.closest('.check').querySelector('.care-status');
+        const previous = !checkbox.checked;
+
+        try {
+            const response = await fetch('/daily-care/' + checkbox.dataset.type, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ checked: checkbox.checked })
+            });
+
+            const result = await response.json();
+
+            if (!response.ok || !result.success) {
+                throw new Error(result.message || '저장 실패');
+            }
+
+            status.textContent = checkbox.checked ? '완료!' : '기록 전';
+        } catch (error) {
+            checkbox.checked = previous;
+            alert(error.message || '기록 저장에 실패했어.');
+        }
+    });
+});
+</script>
+\n</body>
 </html>
 
